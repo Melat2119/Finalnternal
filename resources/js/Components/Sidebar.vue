@@ -2,9 +2,9 @@
   <div class="sidebar bg-white shadow-sm border-end p-4 d-flex flex-column justify-content-between" style="width: 250px; min-height: 100vh;">
     <div>
       <!-- Logo / Brand -->
-      <div class="d-flex align-items-center mb-4">
-        <img src="" alt="Logo" class="me-2" style="width: 30px;" />
-        <h4 class="mb-0 fw-bold text-primary"></h4>
+      <div class="d-flex align-items-center mb-4 ml-4">
+        <img src="/assets/image.png" alt="Logo" class="me-2" style="width: 60px;" />
+        
       </div>
 
       <!-- Navigation Links -->

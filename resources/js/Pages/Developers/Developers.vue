@@ -1,128 +1,102 @@
 <template>
-    <AuthenticatedLayout>
-      <div class="container-fluid py-5">
-        <h1 class="text-center mb-4">Developers</h1>
-        <div class="documents-table table-responsive">
-          <table class="table table-hover align-middle custom-table w-100 mb-0">
-            <thead class="table-light">
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="developer in developers" :key="developer.id">
-                <td>
-                  <div class="fw-semibold">{{ developer.name }}</div>
-                </td>
-                <td>
-                  <div class="text-muted small">{{ developer.email }}</div>
-                </td>
-                <td>
-                  <button class="btn btn-sm btn-primary me-1" @click="viewDeveloper(developer)">View</button>
-                  <button class="btn btn-sm btn-success me-1" @click="uploadDocument(developer)">Upload</button>
-                  <button class="btn btn-sm btn-warning" @click="giveFeedback(developer)">Feedback</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+  <AuthenticatedLayout>
+    <div class="container-fluid py-5 px-4">
+      <!-- Header -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        
+        <button class="btn btn-success px-4" @click="createDocument">
+          <i class="bi bi-plus-lg me-2"></i> Create New Document
+        </button>
       </div>
-    </AuthenticatedLayout>
+
+      <!-- Table -->
+      <div class="card border-0 shadow-sm rounded-4 overflow-auto">
+        <table class="table table-bordered table-striped text-center align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th style="min-width: 200px;">Name</th>
+              <th style="min-width: 250px;">Email</th>
+              <th style="min-width: 300px;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="contributor in developers" :key="contributor.id">
+              <td class="fw-semibold text-dark">{{ contributor.name }}</td>
+              <td class="text-muted">{{ contributor.email }}</td>
+              <td>
+                <div class="d-flex justify-content-center gap-3 flex-wrap">
+                  <button class="btn btn-sm btn-outline-primary px-3" @click="viewDeveloper(contributor)">
+                    <i class="bi bi-eye"></i> View
+                  </button>
+                  <button class="btn btn-sm btn-outline-success px-3" @click="uploadDocument(contributor)">
+                    <i class="bi bi-upload"></i> Upload
+                  </button>
+                  <button class="btn btn-sm btn-outline-warning px-3" @click="giveFeedback(contributor)">
+                    <i class="bi bi-chat-left-text"></i> Feedback
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </AuthenticatedLayout>
 </template>
 
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
-// Receive developers as a prop from the controller
 defineProps({
   developers: Array
 });
 
 function viewDeveloper(developer) {
-  alert(`View developer: ${developer.name}`);
+  alert(`Viewing documents for: ${developer.name}`);
 }
 function uploadDocument(developer) {
-  alert(`Upload document for: ${developer.name}`);
+  alert(`Uploading document for: ${developer.name}`);
 }
 function giveFeedback(developer) {
-  alert(`Give feedback for: ${developer.name}`);
+  alert(`Providing feedback for: ${developer.name}`);
+}
+function createDocument() {
+  alert('Redirect to document creation page/form');
 }
 </script>
 
 <style scoped>
-.container-fluid {
-  max-width: 100vw;
-  padding-left: 2vw;
-  padding-right: 2vw;
+.table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
 }
-.documents-table {
-  box-shadow: 0 4px 24px 0 rgba(60,72,100,.12), 0 1.5px 4px 0 rgba(60,72,100,.08);
-  border-radius: 18px;
-  background: #fff;
-  padding: 0;
+
+.table th,
+.table td {
+  padding: 1rem;
+  vertical-align: middle;
+  border: 1px solid #dee2e6;
 }
-.custom-table {
-  min-width: 900px;
-  border-radius: 18px;
-  overflow: hidden;
-  background: #fff;
-  box-shadow: 0 2px 16px 0 rgba(60,72,100,.10);
+
+.card {
+  border-radius: 1rem;
 }
-.table th, .table td {
-  vertical-align: middle !important;
-  border-bottom: 1px solid #e9ecef;
+
+/* Make action icons light green */
+.btn-outline-primary .bi,
+.btn-outline-success .bi,
+.btn-outline-warning .bi {
+  color: #4ade80 !important; /* Tailwind's green-300, adjust as needed */
 }
-.table thead th {
-  border-top: none;
-  font-size: 1.05rem;
-  background: #f8f9fa;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-}
-.table-hover tbody tr:hover {
-  background: #f6fafd;
-  transition: background 0.2s;
-}
-.badge {
-  font-size: 0.95em;
-  padding: 0.5em 1em;
-  border-radius: 1em;
-  font-weight: 500;
-}
-.bg-success-subtle {
-  background: #e9fbe8;
-  color: #3bb77e !important;
-}
-.bg-secondary-subtle {
-  background: #f1f1f1;
-  color: #888 !important;
-}
-.bg-primary-subtle {
-  background: #e7f1ff;
-  color: #0d6efd !important;
-}
-.bg-purple-subtle {
-  background: #f6e6ff;
-  color: #b36ff6 !important;
-}
-input[type="checkbox"] {
-  width: 1.1em;
-  height: 1.1em;
-}
-@media (max-width: 991px) {
-  .custom-table {
-    min-width: 700px;
+
+@media (max-width: 768px) {
+  .table {
+    font-size: 0.9rem;
   }
-}
-@media (max-width: 767px) {
-  .custom-table {
-    min-width: 500px;
-    font-size: 0.95rem;
-  }
-  .documents-table {
-    border-radius: 10px;
+  .d-flex.gap-3 {
+    flex-direction: column;
+    align-items: center;
   }
 }
 </style>

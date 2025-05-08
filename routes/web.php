@@ -36,25 +36,29 @@ Route::middleware('auth')->group(function () {
     Route::resource('products', ProductController::class)->except(['show']);
     Route::resource('faqs', FaqController::class)->except(['show']);
     Route::resource('feedback', FeedbackController::class)->except(['show']);
+
+    // Replace this:
+    // Route::get('/developers', function () {
+    //     return Inertia::render('Developers/Developers');
+    // })->middleware(['auth'])->name('developers');
+
+    // With this:
+    Route::get('/developers', [\App\Http\Controllers\Developers::class, 'index'])->name('developers');
+
+    // Replace this:
+    // Route::get('/sales', function () {
+    //     return Inertia::render('Sales/index');
+    // })->middleware(['auth'])->name('sales');
+
+    // With this:
+    Route::get('/sales', [\App\Http\Controllers\SalesController::class, 'index'])->name('sales');
 });
 
 // Inertia page routes for sections
-Route::get('/developers', function () {
-    return Inertia::render('Developers/Developers');
-})->middleware(['auth'])->name('developers');
-
-Route::get('/reception', function () {
-    return Inertia::render('Reception/Index');
-})->middleware(['auth'])->name('reception');
+Route::get('/reception', [\App\Http\Controllers\ReceptionController::class, 'index'])->middleware(['auth'])->name('reception');
 
 Route::get('/ui', [\App\Http\Controllers\UidesignerController::class, 'index'])->middleware(['auth'])->name('ui');
 
-Route::get('/socialmedia', function () {
-    return Inertia::render('Socialmediamanager/Index');
-})->middleware(['auth'])->name('socialmedia');
-
-Route::get('/sales', function () {
-    return Inertia::render('Sales/index');
-})->middleware(['auth'])->name('sales');
+Route::get('/socialmedia', [\App\Http\Controllers\SocialmediamanagerController::class, 'index'])->middleware(['auth'])->name('socialmedia');
 
 require __DIR__.'/auth.php';

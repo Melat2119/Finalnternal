@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Sale;
+use App\Models\Sale; // changed from Sales to Sale
 
 class SalesTableSeeder extends Seeder
 {
@@ -16,3 +16,6 @@ class SalesTableSeeder extends Seeder
         ]);
     }
 }
+
+// Run this command in your terminal to seed the database:
+// php artisan db:seed --class=SalesTableSeeder
