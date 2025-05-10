@@ -16,7 +16,7 @@ export default {
         sans: ['Figtree', ...defaultTheme.fontFamily.sans],
       },
       colors: {
-        'custom-light-yellow': '#e7e8a7',  // Custom color here
+        'light-yellow': '#e7e8a7',  // Custom color here
         'gray': '#f9f7f5',                 // Custom gray color
       },
     },

@@ -2,63 +2,61 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Feedback;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class FeedbackController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $feedback = Feedback::all();
+        return Inertia::render('Feedback/Index', [
+            'feedback' => $feedback
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return Inertia::render('Feedback/Create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'developer_id' => 'required|exists:developers,id',
+            'message' => 'required|string|max:1000',
+        ]);
+        Feedback::create($validated);
+        return redirect()->route('feedback.index')->with('success', 'Feedback submitted.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show(Feedback $feedback)
     {
-        //
+        return Inertia::render('Feedback/Show', [
+            'feedback' => $feedback
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function edit(Feedback $feedback)
     {
-        //
+        return Inertia::render('Feedback/Edit', [
+            'feedback' => $feedback
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Feedback $feedback)
     {
-        //
+        $validated = $request->validate([
+            'message' => 'required|string|max:1000',
+        ]);
+        $feedback->update($validated);
+        return redirect()->route('feedback.index')->with('success', 'Feedback updated.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(Feedback $feedback)
     {
-        //
+        $feedback->delete();
+        return redirect()->route('feedback.index')->with('success', 'Feedback deleted.');
     }
 }

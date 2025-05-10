@@ -26,7 +26,7 @@ class Developers extends Controller
     public function create()
     {
         // Show form to create developer
-        return view('developers.create');
+        return Inertia::render('Developers/Create');
     }
 
     /**
@@ -49,7 +49,9 @@ class Developers extends Controller
     public function show(Developer $developer)
     {
         // Show a single developer
-        return view('developers.show', compact('developer'));
+        return Inertia::render('Developers/Show', [
+            'developer' => $developer
+        ]);
     }
 
     /**
@@ -58,7 +60,9 @@ class Developers extends Controller
     public function edit(Developer $developer)
     {
         // Show form to edit developer
-        return view('developers.edit', compact('developer'));
+        return Inertia::render('Developers/Edit', [
+            'developer' => $developer
+        ]);
     }
 
     /**

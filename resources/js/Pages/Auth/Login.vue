@@ -42,8 +42,8 @@ const submit = () => {
     </div>
 
     <!-- Right Side: Login Form -->
-    <div class="w-full md:w-1/2 flex items-center justify-center px-6 md:px-12 bg-gray-100">
-      <div class="w-full max-w-md">
+    <div class="w-full md:w-1/2 flex items-center justify-center px-6 md:px-12 bg-gray">
+      <div class="w-full max-w-sm">
         <h2 class="text-2xl font-semibold text-gray-800 text-center mb-6">Login</h2>
 
         <div v-if="status" class="mb-4 text-sm font-medium text-green-600 text-center">
@@ -98,11 +98,11 @@ const submit = () => {
 
           <!-- Submit -->
           <PrimaryButton
-            class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-md"
+            class=" bg-green-600 hover:bg-green-700 text-white py-2 rounded-md "
             :class="{ 'opacity-25': form.processing }"
             :disabled="form.processing"
           >
-            Log in
+            Login
           </PrimaryButton>
         </form>
       </div>

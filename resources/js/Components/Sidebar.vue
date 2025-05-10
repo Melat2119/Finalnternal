@@ -4,20 +4,21 @@
       <!-- Logo / Brand -->
       <div class="d-flex align-items-center mb-4 ml-4">
         <img src="/assets/image.png" alt="Logo" class="me-2" style="width: 60px;" />
-        
       </div>
-
       <!-- Navigation Links -->
       <ul class="nav flex-column">
-        <li class="nav-item mb-2" v-for="link in links" :key="link.href">
-          <Link :href="link.href" class="nav-link d-flex align-items-center sidebar-link" :class="{ active: $page.url === link.href }">
+        <li class="nav-item mb-2" v-for="link in links" :key="link.name">
+          <Link
+            :href="route(link.name)"
+            class="nav-link d-flex align-items-center sidebar-link"
+            :class="{ active: $page.url.startsWith('/' + link.urlStart) }"
+          >
             <i :class="link.icon + ' me-2 text-primary'"></i>
             {{ link.label }}
           </Link>
         </li>
       </ul>
     </div>
-
     <!-- Optional Footer/Account Section -->
     <div class="mt-4">
       <hr />
@@ -34,15 +35,15 @@
 </template>
 
 <script setup>
-import { Link } from '@inertiajs/inertia-vue3'
+import { Link } from '@inertiajs/vue3'
 
 const links = [
-  { href: '/dashboard', label: 'Dashboard', icon: 'bi bi-house-door' },
-  { href: '/sales', label: 'Sales', icon: 'bi bi-bar-chart-line' },
-  { href: '/developers', label: 'Developers', icon: 'bi bi-code-slash' },
-  { href: '/ui', label: 'UI/UX Designers', icon: 'bi bi-palette' },
-  { href: '/socialmedia', label: 'Social Media Manager', icon: 'bi bi-share' },
-  { href: '/reception', label: 'Reception', icon: 'bi bi-person' },
+  { name: 'dashboard', label: 'Dashboard', icon: 'bi bi-house-door', urlStart: 'dashboard' },
+  { name: 'sales.index', label: 'Sales', icon: 'bi bi-bar-chart-line', urlStart: 'sales' },
+  { name: 'developers.index', label: 'Developers', icon: 'bi bi-code-slash', urlStart: 'developers' },
+  { name: 'ui.index', label: 'UI/UX Designers', icon: 'bi bi-palette', urlStart: 'ui' },
+  { name: 'socialmedia.index', label: 'Social Media Manager', icon: 'bi bi-share', urlStart: 'socialmedia' },
+  { name: 'reception.index', label: 'Reception', icon: 'bi bi-person', urlStart: 'reception' },
 ]
 </script>
 

@@ -38,14 +38,14 @@ const submit = () => {
     </div>
 
     <!-- Right Side: Register Form -->
-    <div class="w-full md:w-1/2 flex items-center justify-center px-6 md:px-12 bg-gray-100">
-      <div class="w-full max-w-md">
+    <div class="w-full md:w-1/2 flex items-center justify-center px-6 md:px-12 bg-gray">
+      <div class="w-full max-w-sm">
         <h2 class="text-2xl font-semibold text-gray-800 text-center mb-6">Register</h2>
 
         <form @submit.prevent="submit" class="space-y-4">
           <!-- Name -->
           <div>
-            <InputLabel for="name" value="Name" />
+            <!-- <InputLabel for="name" value="Name" /> -->
             <TextInput
               id="name"
               type="text"
@@ -61,7 +61,7 @@ const submit = () => {
 
           <!-- Email -->
           <div>
-            <InputLabel for="email" value="Email" />
+            <!-- <InputLabel for="email" value="Email" /> -->
             <TextInput
               id="email"
               type="email"
@@ -76,7 +76,7 @@ const submit = () => {
 
           <!-- Password -->
           <div>
-            <InputLabel for="password" value="Password" />
+            <!-- <InputLabel for="password" value="Password" /> -->
             <TextInput
               id="password"
               type="password"
@@ -91,7 +91,7 @@ const submit = () => {
 
           <!-- Confirm Password -->
           <div>
-            <InputLabel for="password_confirmation" value="Confirm Password" />
+            <!-- <InputLabel for="password_confirmation" value="Confirm Password" /> -->
             <TextInput
               id="password_confirmation"
               type="password"

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Socialmediamanager;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class SocialmediamanagerController extends Controller
@@ -13,5 +14,50 @@ class SocialmediamanagerController extends Controller
         return Inertia::render('Socialmediamanager/Index', [
             'managers' => $managers
         ]);
+    }
+
+    public function create()
+    {
+        return Inertia::render('Socialmediamanager/Create');
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:socialmediamanagers,email',
+        ]);
+        Socialmediamanager::create($validated);
+        return redirect()->route('socialmedia.index')->with('success', 'Manager created successfully.');
+    }
+
+    public function show(Socialmediamanager $socialmedia)
+    {
+        return Inertia::render('Socialmediamanager/Show', [
+            'manager' => $socialmedia
+        ]);
+    }
+
+    public function edit(Socialmediamanager $socialmedia)
+    {
+        return Inertia::render('Socialmediamanager/Edit', [
+            'manager' => $socialmedia
+        ]);
+    }
+
+    public function update(Request $request, Socialmediamanager $socialmedia)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:socialmediamanagers,email,' . $socialmedia->id,
+        ]);
+        $socialmedia->update($validated);
+        return redirect()->route('socialmedia.index')->with('success', 'Manager updated successfully.');
+    }
+
+    public function destroy(Socialmediamanager $socialmedia)
+    {
+        $socialmedia->delete();
+        return redirect()->route('socialmedia.index')->with('success', 'Manager deleted successfully.');
     }
 }

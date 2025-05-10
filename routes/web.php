@@ -24,6 +24,14 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/admin', function () {
+    return Inertia::render('Admin/Index');
+})->middleware(['auth'])->name('admin');
+
+Route::get('/manager', function () {
+    return Inertia::render('Manager/Index');
+})->middleware(['auth'])->name('manager');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -35,30 +43,32 @@ Route::middleware('auth')->group(function () {
     Route::resource('services', ServiceController::class)->except(['show']);
     Route::resource('products', ProductController::class)->except(['show']);
     Route::resource('faqs', FaqController::class)->except(['show']);
-    Route::resource('feedback', FeedbackController::class)->except(['show']);
+    Route::resource('feedback', FeedbackController::class);
 
-    // Replace this:
-    // Route::get('/developers', function () {
-    //     return Inertia::render('Developers/Developers');
-    // })->middleware(['auth'])->name('developers');
+    // Use only the resourceful route:
+    Route::resource('developers', \App\Http\Controllers\Developers::class);
 
-    // With this:
-    Route::get('/developers', [\App\Http\Controllers\Developers::class, 'index'])->name('developers');
+    // Remove or comment out this line:
+    // Route::get('/sales', [\App\Http\Controllers\SalesController::class, 'index'])->name('sales');
 
-    // Replace this:
-    // Route::get('/sales', function () {
-    //     return Inertia::render('Sales/index');
-    // })->middleware(['auth'])->name('sales');
+    // Add this line for full CRUD:
+    Route::resource('sales', \App\Http\Controllers\SalesController::class);
 
-    // With this:
-    Route::get('/sales', [\App\Http\Controllers\SalesController::class, 'index'])->name('sales');
+    // Remove or comment out this line:
+    // Route::get('/reception', [\App\Http\Controllers\ReceptionController::class, 'index'])->middleware(['auth'])->name('reception');
+
+    // Add this line for full CRUD:
+    Route::resource('reception', \App\Http\Controllers\ReceptionController::class);
+
+    // Remove or comment out this line:
+    // Route::get('/socialmedia', [\App\Http\Controllers\SocialmediamanagerController::class, 'index'])->middleware(['auth'])->name('socialmedia');
+
+    // Add this line for full CRUD:
+    Route::resource('socialmedia', \App\Http\Controllers\SocialmediamanagerController::class);
+
+    // Add this line for full CRUD for UI/UX Designers:
+    Route::resource('ui', \App\Http\Controllers\UidesignerController::class);
 });
 
 // Inertia page routes for sections
-Route::get('/reception', [\App\Http\Controllers\ReceptionController::class, 'index'])->middleware(['auth'])->name('reception');
-
-Route::get('/ui', [\App\Http\Controllers\UidesignerController::class, 'index'])->middleware(['auth'])->name('ui');
-
-Route::get('/socialmedia', [\App\Http\Controllers\SocialmediamanagerController::class, 'index'])->middleware(['auth'])->name('socialmedia');
-
 require __DIR__.'/auth.php';

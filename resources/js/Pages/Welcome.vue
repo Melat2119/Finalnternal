@@ -10,7 +10,7 @@
       </div>
 
       <!-- Right: Text and Actions -->
-      <div class="w-full md:w-1/2 ml-40 mt-0 text-center md:text-left">
+      <div class="w-full md:w-1/2 ml-52 mr-0 mt-0 mb-30 text-center md:text-left">
         <h1 class="text-4xl md:text-5xl font-extrabold text-gray-800 leading-tight">
           Welcome to<br />
           <span class="text-green-400">Our Family</span>
