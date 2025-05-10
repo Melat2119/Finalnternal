@@ -41,6 +41,15 @@
           <div class="text-sm text-gray-500">Pending Approvals</div>
           <div class="text-3xl font-bold">14</div>
         </div>
+
+        <!-- CHART BLOCK -->
+        <div class="bg-white p-4 shadow rounded col-span-full">
+          <div class="text-sm text-gray-500 mb-2">📊 Documents by Department</div>
+          <div class="h-72">
+            <Bar :data="chartData" :options="chartOptions" />
+          </div>
+        </div>
+
         <div class="bg-white p-4 shadow rounded col-span-full">
           <div class="text-sm text-gray-500 mb-2">System Activity (Last 24h)</div>
           <ul class="space-y-2 text-sm">
@@ -55,7 +64,45 @@
 </template>
 
 <script setup>
-// Future: Load stats and activities via API or Pinia
+import { Bar } from 'vue-chartjs'
+import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  CategoryScale,
+  LinearScale
+} from 'chart.js'
+
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+
+const chartData = {
+  labels: ['HR', 'Finance', 'IT', 'Legal', 'Sales'],
+  datasets: [
+    {
+      label: 'Documents Processed',
+      backgroundColor: '#3b82f6',
+      borderRadius: 4,
+      data: [180, 240, 320, 150, 200]
+    }
+  ]
+}
+
+const chartOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: {
+      display: true
+    }
+  },
+  scales: {
+    y: {
+      beginAtZero: true
+    }
+  }
+}
 </script>
 
 <style scoped>

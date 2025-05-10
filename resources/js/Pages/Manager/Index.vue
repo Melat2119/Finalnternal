@@ -41,6 +41,15 @@
           <div class="text-sm text-gray-500">Completed Approvals</div>
           <div class="text-3xl font-bold">25</div>
         </div>
+
+        <!-- CHART BLOCK -->
+        <div class="bg-white p-4 shadow rounded col-span-full">
+          <div class="text-sm text-gray-500 mb-2">🔁 Approvals by Department</div>
+          <div class="h-72">
+            <Bar :data="chartData" :options="chartOptions" />
+          </div>
+        </div>
+
         <div class="bg-white p-4 shadow rounded col-span-full">
           <div class="text-sm text-gray-500 mb-2">Recent Activity</div>
           <ul class="space-y-2 text-sm">
@@ -55,7 +64,45 @@
 </template>
 
 <script setup>
-// You can later import data via Vuex/Pinia or API calls
+import { Bar } from 'vue-chartjs'
+import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  CategoryScale,
+  LinearScale
+} from 'chart.js'
+
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+
+const chartData = {
+  labels: ['HR', 'Finance', 'IT', 'Logistics'],
+  datasets: [
+    {
+      label: 'Approvals Completed',
+      backgroundColor: '#10b981',
+      borderRadius: 5,
+      data: [15, 8, 12, 9]
+    }
+  ]
+}
+
+const chartOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: {
+      display: true
+    }
+  },
+  scales: {
+    y: {
+      beginAtZero: true
+    }
+  }
+}
 </script>
 
 <style scoped>
