@@ -60,11 +60,9 @@ Route::middleware('auth')->group(function () {
     // Add this line for full CRUD:
     Route::resource('reception', \App\Http\Controllers\ReceptionController::class);
 
-    // Remove or comment out this line:
-    // Route::get('/socialmedia', [\App\Http\Controllers\SocialmediamanagerController::class, 'index'])->middleware(['auth'])->name('socialmedia');
-
-    // Add this line for full CRUD:
-    Route::resource('socialmedia', \App\Http\Controllers\SocialmediamanagerController::class);
+    // Only admin and manager can access Social Media Manager pages
+    Route::resource('socialmedia', \App\Http\Controllers\SocialmediamanagerController::class)
+        ->middleware('role:admin|manager');
 
     // Add this line for full CRUD for UI/UX Designers:
     Route::resource('ui', \App\Http\Controllers\UidesignerController::class);
