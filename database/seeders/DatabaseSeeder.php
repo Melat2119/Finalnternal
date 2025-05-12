@@ -21,11 +21,14 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call([
+            DocumentSeeder::class,
             SalesTableSeeder::class,
             UidesignersTableSeeder::class,
             DevelopersTableSeeder::class,
             ReceptionsTableSeeder::class,
             SocialmediamanagersTableSeeder::class,
+            AuditLogSeeder::class,
+            SalesDocumentSeeder::class,
         ]);
     }
 }

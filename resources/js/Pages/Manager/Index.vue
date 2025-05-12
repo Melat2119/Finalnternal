@@ -4,10 +4,10 @@
     <aside class="w-64 bg-white shadow-md fixed h-full z-10">
       <div class="p-4 text-xl font-bold border-b">📁 Omishtu JTS</div>
       <nav class="p-4 space-y-4">
-        <div class="hover:bg-gray-200 p-2 rounded cursor-pointer">📄 Documents</div>
-        <div class="hover:bg-gray-200 p-2 rounded cursor-pointer">✉️ Letters</div>
-        <div class="hover:bg-gray-200 p-2 rounded cursor-pointer">🔁 Approvals</div>
-        <div class="hover:bg-gray-200 p-2 rounded cursor-pointer">📊 Reports</div>
+        <div class="hover:bg-gray-200 p-2 rounded cursor-pointer" @click="goToDocuments">📄 Documents</div>
+        <div class="hover:bg-gray-200 p-2 rounded cursor-pointer" @click="goToLetters">✉️ Letters</div>
+        <div class="hover:bg-gray-200 p-2 rounded cursor-pointer" @click="goToApprovals">🔁 Approvals</div>
+        <div class="hover:bg-gray-200 p-2 rounded cursor-pointer" @click="goToReports">📊 Reports</div>
         <div class="hover:bg-gray-200 p-2 rounded cursor-pointer">🛠️ Settings</div>
       </nav>
     </aside>
@@ -74,6 +74,7 @@ import {
   CategoryScale,
   LinearScale
 } from 'chart.js'
+import { router } from '@inertiajs/vue3'
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
@@ -102,6 +103,17 @@ const chartOptions = {
       beginAtZero: true
     }
   }
+}
+
+// Navigation handler for Documents
+function goToDocuments() {
+  router.visit(route('manager.documents'));
+}
+function goToLetters() {
+  router.visit(route('manager.letters'));
+}
+function goToReports() {
+  router.visit(route('manager.reports'));
 }
 </script>
 

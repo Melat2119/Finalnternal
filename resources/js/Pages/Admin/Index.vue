@@ -4,10 +4,10 @@
     <aside class="w-64 bg-white shadow-md fixed h-full z-10">
       <div class="p-4 text-xl font-bold border-b">👨‍💼 Admin Panel</div>
       <nav class="p-4 space-y-4">
-        <div class="hover:bg-gray-200 p-2 rounded cursor-pointer">📁 Document Overview</div>
-        <div class="hover:bg-gray-200 p-2 rounded cursor-pointer">✉️ Letters Summary</div>
-        <div class="hover:bg-gray-200 p-2 rounded cursor-pointer">🔎 Audit Logs</div>
-        <div class="hover:bg-gray-200 p-2 rounded cursor-pointer">👥 Manage Users</div>
+        <div class="hover:bg-gray-200 p-2 rounded cursor-pointer" @click="goToDocumentOverview">📁 Document Overview</div>
+        <div class="hover:bg-gray-200 p-2 rounded cursor-pointer" @click="goToLettersSummary">✉️ Letters Summary</div>
+        <div class="hover:bg-gray-200 p-2 rounded cursor-pointer" @click="goToAuditLogs">🔎 Audit Logs</div>
+        <div class="hover:bg-gray-200 p-2 rounded cursor-pointer" @click="goToManageUsers">👥 Manage Users</div>
         <div class="hover:bg-gray-200 p-2 rounded cursor-pointer">⚙️ System Settings</div>
       </nav>
     </aside>
@@ -64,6 +64,7 @@
 </template>
 
 <script setup>
+import { router } from '@inertiajs/vue3'
 import { Bar } from 'vue-chartjs'
 import {
   Chart as ChartJS,
@@ -102,6 +103,20 @@ const chartOptions = {
       beginAtZero: true
     }
   }
+}
+
+// Add navigation handler
+function goToDocumentOverview() {
+  router.visit(route('admin.documents'));
+}
+function goToLettersSummary() {
+  router.visit(route('admin.letters'));
+}
+function goToAuditLogs() {
+  router.visit(route('admin.auditlogs'));
+}
+function goToManageUsers() {
+  router.visit(route('admin.manageusers'));
 }
 </script>
 

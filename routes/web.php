@@ -10,6 +10,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\FeedbackController;
 use Inertia\Inertia;
+use App\Http\Controllers\AdminController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -54,6 +55,9 @@ Route::middleware('auth')->group(function () {
     // Add this line for full CRUD:
     Route::resource('sales', \App\Http\Controllers\SalesController::class);
 
+    // Add this route for file upload
+    Route::post('/sales/{sale}/upload', [\App\Http\Controllers\SalesController::class, 'upload'])->name('sales.upload');
+
     // Remove or comment out this line:
     // Route::get('/reception', [\App\Http\Controllers\ReceptionController::class, 'index'])->middleware(['auth'])->name('reception');
 
@@ -68,6 +72,26 @@ Route::middleware('auth')->group(function () {
 
     // Add this line for full CRUD for UI/UX Designers:
     Route::resource('ui', \App\Http\Controllers\UidesignerController::class);
+
+    // Add a route for the manager documents page:
+    Route::get('/manager/documents', [\App\Http\Controllers\ManagerController::class, 'documents'])->name('manager.documents');
+    Route::get('/manager/letters', [\App\Http\Controllers\ManagerController::class, 'letters'])->name('manager.letters');
+    Route::get('/manager/reports', [\App\Http\Controllers\ManagerController::class, 'reports'])->name('manager.reports');
+    Route::get('/manager/approvals', [\App\Http\Controllers\ManagerController::class, 'approvals'])->name('manager.approvals');
+    Route::post('/manager/approvals/{approval}/approve', [\App\Http\Controllers\ManagerController::class, 'approve'])->name('manager.approvals.approve');
+    Route::post('/manager/approvals/{approval}/reject', [\App\Http\Controllers\ManagerController::class, 'reject'])->name('manager.approvals.reject');
+
+    // Admin dashboard and operations
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin');
+    Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
+    Route::get('/admin/settings', [AdminController::class, 'settings'])->name('admin.settings');
+    Route::get('/admin/documents', [AdminController::class, 'documents'])->name('admin.documents');
+    Route::get('/admin/letters', [AdminController::class, 'letters'])->name('admin.letters');
+    Route::get('/admin/auditlogs', [AdminController::class, 'auditlogs'])->name('admin.auditlogs');
+    Route::get('/admin/manageusers', [AdminController::class, 'manageusers'])->name('admin.manageusers');
+
+    // Add resource route for sales documents
+    Route::resource('sales-documents', \App\Http\Controllers\SalesDocumentController::class);
 });
 
 // Inertia page routes for sections

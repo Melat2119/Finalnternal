@@ -4,14 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Document extends Model
+class Letter extends Model
 {
     protected $fillable = [
-        'name',
+        'subject',
+        'content',
         'department',
         'status',
-        'file_url',
         // ...other fields...
     ];
 }
-

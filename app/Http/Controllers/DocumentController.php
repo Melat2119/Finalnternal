@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 use App\Models\Document;
-
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Storage;
+
 class DocumentController extends Controller
 {
     /**
@@ -33,7 +34,27 @@ class DocumentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'department' => 'nullable|string|max:255',
+            'uploaded_by' => 'nullable|string|max:255',
+            'status' => 'nullable|string|max:255',
+            'file' => 'required|file|max:10240', // max 10MB
+        ]);
+
+        // Store file and get URL
+        $path = $request->file('file')->store('documents', 'public');
+        $fileUrl = Storage::url($path);
+
+        $document = \App\Models\Document::create([
+            'title' => $validated['title'],
+            'department' => $validated['department'] ?? null,
+            'uploaded_by' => $validated['uploaded_by'] ?? null,
+            'status' => $validated['status'] ?? 'pending',
+            'file_url' => $fileUrl,
+        ]);
+
+        return redirect()->route('documents.index')->with('success', 'Document uploaded successfully.');
     }
 
     /**

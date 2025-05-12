@@ -24,9 +24,15 @@ class FeedbackController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'developer_id' => 'required|exists:developers,id',
+            'developer_id' => 'nullable|exists:developers,id',
+            'sale_id' => 'nullable|exists:sales_documents,id',
             'message' => 'required|string|max:1000',
         ]);
+
+        if (!isset($validated['developer_id']) && !isset($validated['sale_id'])) {
+            return back()->withErrors(['message' => 'Feedback must be associated with a developer or a sale.']);
+        }
+
         Feedback::create($validated);
         return redirect()->route('feedback.index')->with('success', 'Feedback submitted.');
     }

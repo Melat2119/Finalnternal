@@ -11,9 +11,10 @@
         <table class="table table-hover align-middle custom-table w-100 mb-0">
           <thead class="table-light">
             <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Actions</th>
+              <th>DocumentName</th>
+              <th>client</th>
+              <th>creator</th>
+              <th>status</th>
             </tr>
           </thead>
           <tbody>
