@@ -37,21 +37,18 @@ class DocumentController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'department' => 'nullable|string|max:255',
-            'uploaded_by' => 'nullable|string|max:255',
-            'status' => 'nullable|string|max:255',
             'file' => 'required|file|max:10240', // max 10MB
         ]);
 
-        // Store file and get URL
+        // Store file in local storage (storage/app/public)
         $path = $request->file('file')->store('documents', 'public');
-        $fileUrl = Storage::url($path);
+        $fileUrl = '/storage/' . $path; // This will be accessible via the public URL
 
         $document = \App\Models\Document::create([
             'title' => $validated['title'],
             'department' => $validated['department'] ?? null,
-            'uploaded_by' => $validated['uploaded_by'] ?? null,
-            'status' => $validated['status'] ?? 'pending',
-            'file_url' => $fileUrl,
+            'file_path' => $fileUrl,
+            // ...other fields as needed...
         ]);
 
         return redirect()->route('documents.index')->with('success', 'Document uploaded successfully.');

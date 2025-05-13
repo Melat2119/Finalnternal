@@ -13,4 +13,9 @@ class Developer extends Model
         'name',
         'email',
     ];
+
+    public function documents()
+    {
+        return $this->belongsToMany(Document::class, 'developer_document');
+    }
 }

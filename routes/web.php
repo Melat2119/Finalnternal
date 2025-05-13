@@ -48,6 +48,7 @@ Route::middleware('auth')->group(function () {
 
     // Use only the resourceful route:
     Route::resource('developers', \App\Http\Controllers\Developers::class);
+    Route::post('/developers/{developer}/upload-document', [\App\Http\Controllers\Developers::class, 'storeDocument'])->name('developers.uploadDocument');
 
     // Remove or comment out this line:
     // Route::get('/sales', [\App\Http\Controllers\SalesController::class, 'index'])->name('sales');
@@ -69,6 +70,7 @@ Route::middleware('auth')->group(function () {
 
     // Add this line for full CRUD:
     Route::resource('socialmedia', \App\Http\Controllers\SocialmediamanagerController::class);
+    Route::post('/socialmedia/{manager}/upload', [\App\Http\Controllers\SocialmediamanagerController::class, 'upload'])->name('socialmedia.upload');
 
     // Add this line for full CRUD for UI/UX Designers:
     Route::resource('ui', \App\Http\Controllers\UidesignerController::class);

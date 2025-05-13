@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Developer;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Storage;
+use App\Models\Document;
 
 class Developers extends Controller
 {
@@ -13,13 +15,9 @@ class Developers extends Controller
      */
     public function index()
     {
-        // Fetch all documents for developers
-        $documents = \App\Models\Document::all();
-        // Return all developers to Vue via Inertia
-        $developers = Developer::all();
-        return Inertia::render('Developers/Developers', [
+        $developers = Developer::with('documents')->get();
+        return Inertia::render('Developers/Index', [
             'developers' => $developers,
-            'documents' => $documents
         ]);
     }
 
@@ -44,6 +42,31 @@ class Developers extends Controller
         ]);
         Developer::create($validated);
         return redirect()->route('developers.index')->with('success', 'Developer created successfully.');
+    }
+
+    /**
+     * Store a newly created document for a developer.
+     */
+    public function storeDocument(Request $request, Developer $developer)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'department' => 'nullable|string|max:255',
+            'file' => 'required|file|max:10240',
+        ]);
+
+        $path = $request->file('file')->store('documents', 'public');
+        $fileUrl = '/storage/' . $path;
+
+        $document = Document::create([
+            'title' => $validated['title'],
+            'department' => $validated['department'] ?? null,
+            'file_path' => $fileUrl,
+        ]);
+
+        $developer->documents()->attach($document->id);
+
+        return redirect()->back()->with('success', 'Document uploaded and linked to developer.');
     }
 
     /**

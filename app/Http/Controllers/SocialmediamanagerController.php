@@ -60,4 +60,20 @@ class SocialmediamanagerController extends Controller
         $socialmedia->delete();
         return redirect()->route('socialmedia.index')->with('success', 'Manager deleted successfully.');
     }
+
+    public function upload(Request $request, Socialmediamanager $manager)
+    {
+        $request->validate([
+            'file' => 'required|file|max:10240', // 10MB max
+        ]);
+
+        $path = $request->file('file')->store('manager-documents', 'public');
+        $fileUrl = '/storage/' . $path;
+
+        // You can save the file URL to a related table or log it as needed.
+        // Example: $manager->documents()->create(['file_path' => $fileUrl]);
+        // For now, just return success.
+
+        return back()->with('success', 'File uploaded successfully.');
+    }
 }

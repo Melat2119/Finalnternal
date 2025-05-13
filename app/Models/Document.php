@@ -7,12 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Document extends Model
 {
     protected $fillable = [
-        // 'name',
-        // 'department',
-        // 'status',
-        // 'file_url',
-        // ...other fields...
-          'title',
+        'title',
         'department',
         'type',
         'file_path',
@@ -21,5 +16,10 @@ class Document extends Model
         'approved_by',
         'approval_comment',
     ];
+
+    public function developers()
+    {
+        return $this->belongsToMany(Developer::class, 'developer_document');
+    }
 }
 
