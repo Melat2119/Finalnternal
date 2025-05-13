@@ -13,5 +13,8 @@ class Kernel extends HttpKernel
      *
      * @var array<string, class-string|string>
      */
-   
+    // protected $middlewareAliases = [
+    //     'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
+    //     'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
+    // ];
 }

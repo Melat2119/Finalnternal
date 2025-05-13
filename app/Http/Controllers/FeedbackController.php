@@ -34,7 +34,7 @@ class FeedbackController extends Controller
         }
 
         Feedback::create($validated);
-        return redirect()->route('feedback.index')->with('success', 'Feedback submitted.');
+        return back()->with('success', 'Feedback submitted.');
     }
 
     public function show(Feedback $feedback)

@@ -11,6 +11,8 @@ use App\Http\Controllers\FaqController;
 use App\Http\Controllers\FeedbackController;
 use Inertia\Inertia;
 use App\Http\Controllers\AdminController;
+use Spatie\Permission\Middlewares\RoleMiddleware;
+use Spatie\Permission\Middlewares\PermissionMiddleware;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -95,6 +97,11 @@ Route::middleware('auth')->group(function () {
     // Add resource route for sales documents
     Route::resource('sales-documents', \App\Http\Controllers\SalesDocumentController::class);
 });
+
+// Restrict developer routes to admin role
+
+    Route::resource('developers', \App\Http\Controllers\Developers::class);
+    Route::post('/developers/{developer}/upload-document', [\App\Http\Controllers\Developers::class, 'storeDocument'])->name('developers.uploadDocument');
 
 // Inertia page routes for sections
 require __DIR__.'/auth.php';

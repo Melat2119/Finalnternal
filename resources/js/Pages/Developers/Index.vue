@@ -267,6 +267,9 @@
                                 Cancel
                             </button>
                         </div>
+                        <div v-if="feedbackSuccess" class="text-success mt-2">
+                            Feedback submitted!
+                        </div>
                     </form>
                 </template>
             </Modal>
@@ -338,6 +341,7 @@ const selectedDeveloper = ref(null);
 const createForm = useForm({ name: "", email: "" });
 const editForm = useForm({ id: null, name: "", email: "" });
 const feedbackForm = useForm({ developer_id: null, message: "" });
+const feedbackSuccess = ref(false);
 
 function openCreate() {
     createForm.reset();
@@ -372,16 +376,21 @@ function deleteDeveloper(developer) {
 }
 
 function openFeedback(developer) {
+    feedbackForm.reset();
     feedbackForm.developer_id = developer.id;
-    feedbackForm.message = "";
     selectedDeveloper.value = developer;
     showFeedback.value = true;
+    feedbackSuccess.value = false;
 }
 function submitFeedback() {
     feedbackForm.post(route("feedback.store"), {
         onSuccess: () => {
-            showFeedback.value = false;
-            feedbackForm.reset();
+            feedbackSuccess.value = true;
+            feedbackForm.message = "";
+            setTimeout(() => {
+                showFeedback.value = false;
+                feedbackSuccess.value = false;
+            }, 1200);
         },
     });
 }
