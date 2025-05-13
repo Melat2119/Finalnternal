@@ -15,16 +15,19 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        \App\Models\User::updateOrCreate(
+            ['email' => 'test@example.com'],
+            [
+                'name' => 'Test User',
+                'password' => bcrypt('password'), // Set a default password
+            ]
+        );
 
         $this->call([
+            DevelopersTableSeeder::class,
             DocumentSeeder::class,
             SalesTableSeeder::class,
             UidesignersTableSeeder::class,
-            DevelopersTableSeeder::class,
             ReceptionsTableSeeder::class,
             SocialmediamanagersTableSeeder::class,
             AuditLogSeeder::class,

@@ -13,10 +13,13 @@ class Developers extends Controller
      */
     public function index()
     {
+        // Fetch all documents for developers
+        $documents = \App\Models\Document::all();
         // Return all developers to Vue via Inertia
         $developers = Developer::all();
         return Inertia::render('Developers/Developers', [
-            'developers' => $developers
+            'developers' => $developers,
+            'documents' => $documents
         ]);
     }
 
