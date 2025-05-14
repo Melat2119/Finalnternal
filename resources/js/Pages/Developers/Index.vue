@@ -1,19 +1,21 @@
 <template>
-    <AuthenticatedLayout>
-        <div class="container-fluid py-5">
-            <h1 class="fw-bold text-primary mb-4">Developers & Documents</h1>
+    <!-- <AuthenticatedLayout> -->
+    <div class="container-fluid py-5 main-bg">
+        <div class="dev-card mx-auto">
+            <h1 class="fw-bold text-primary mb-4 text-center">
+                Developers & Documents
+            </h1>
             <div
                 v-if="!developers || developers.length === 0"
                 class="alert alert-info text-center"
             >
                 No developers found.
             </div>
-            <div class="table-responsive">
-                <table class="table table-bordered align-middle">
+            <div class="main-table-responsive">
+                <table class="table table-bordered align-middle mb-0 dev-table">
                     <thead class="table-light">
                         <tr>
-                            <th>Name</th>
-                            <th>Email</th>
+                            <!-- Removed Name and Email columns -->
                             <th>Documents</th>
                             <th>Upload Document</th>
                             <th>Actions</th>
@@ -21,38 +23,42 @@
                     </thead>
                     <tbody>
                         <tr v-for="developer in developers" :key="developer.id">
-                            <td>
-                                <div class="fw-semibold">
-                                    {{ developer.name }}
-                                </div>
-                            </td>
-                            <td>
-                                <div class="text-muted small">
-                                    {{ developer.email }}
-                                </div>
-                            </td>
-                            <td>
+                            <!-- Removed Name and Email cells -->
+                            <td style="min-width: 350px">
                                 <div
                                     v-if="
                                         developer.documents &&
                                         developer.documents.length
                                     "
+                                    class="docs-table-responsive"
                                 >
                                     <table
-                                        class="table table-sm table-bordered mb-0"
+                                        class="table table-sm table-bordered mb-0 docs-table"
                                     >
                                         <thead>
                                             <tr>
                                                 <th>Title</th>
+                                                <th>Department</th>
+                                                <th>Type</th>
                                                 <th>File</th>
+                                                <th>Uploaded By</th>
+                                                <th>Status</th>
+                                                <th>Approval Comment</th>
+                                                <th>Edit</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr
                                                 v-for="doc in developer.documents"
-                                                :key="doc.id"
+                                                :key="
+                                                    doc.id + '-' + developer.id
+                                                "
                                             >
                                                 <td>{{ doc.title }}</td>
+                                                <td>
+                                                    {{ doc.department }}
+                                                </td>
+                                                <td>{{ doc.type }}</td>
                                                 <td>
                                                     <button
                                                         class="btn btn-link p-0"
@@ -75,35 +81,92 @@
                                                         >
                                                     </button>
                                                 </td>
+                                                <td>
+                                                    {{ doc.uploaded_by }}
+                                                </td>
+                                                <td>
+                                                    <span
+                                                        :class="{
+                                                            'badge bg-success':
+                                                                doc.status ===
+                                                                'approved',
+                                                            'badge bg-warning text-dark':
+                                                                doc.status ===
+                                                                'pending',
+                                                            'badge bg-danger':
+                                                                doc.status ===
+                                                                'rejected',
+                                                        }"
+                                                    >
+                                                        {{ doc.status }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span
+                                                        :class="{
+                                                            'text-success':
+                                                                doc.approval_comment,
+                                                            'text-muted':
+                                                                !doc.approval_comment,
+                                                        }"
+                                                    >
+                                                        {{
+                                                            doc.approval_comment ||
+                                                            "—"
+                                                        }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <button
+                                                        class="btn btn-sm btn-outline-primary"
+                                                        @click="
+                                                            openEditDoc(doc)
+                                                        "
+                                                    >
+                                                        ✏️
+                                                    </button>
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
                             </td>
-                            <td>
+                            <td style="min-width: 220px">
                                 <form
                                     v-if="uploadForms[developer.id]"
                                     @submit.prevent="submitUpload(developer.id)"
-                                    class="d-flex flex-column gap-2"
+                                    class="upload-form shadow-sm rounded p-2 bg-light"
                                 >
                                     <input
                                         v-model="
                                             uploadForms[developer.id].title
                                         "
-                                        class="form-control"
+                                        class="form-control mb-1"
                                         placeholder="Document Title"
                                         required
                                     />
                                     <input
+                                        v-model="
+                                            uploadForms[developer.id].department
+                                        "
+                                        class="form-control mb-1"
+                                        placeholder="Department"
+                                    />
+                                    <input
+                                        v-model="uploadForms[developer.id].type"
+                                        class="form-control mb-1"
+                                        placeholder="Type"
+                                    />
+                                    <input
                                         type="file"
-                                        class="form-control"
+                                        class="form-control mb-1"
                                         @change="
                                             onFileChange($event, developer.id)
                                         "
                                         required
                                     />
                                     <button
-                                        class="btn btn-outline-success"
+                                        class="btn btn-outline-success w-100"
                                         :disabled="
                                             uploadForms[developer.id].processing
                                         "
@@ -123,31 +186,33 @@
                                     </button>
                                     <div
                                         v-if="uploadForms[developer.id].success"
-                                        class="text-success small"
+                                        class="text-success small text-center mt-1"
                                     >
                                         Uploaded!
                                     </div>
                                 </form>
                             </td>
-                            <td>
-                                <div class="btn-group gap-2 flex flex-wrap">
+                            <td style="min-width: 160px">
+                                <div
+                                    class="btn-group gap-2 flex flex-col flex-wrap justify-content-center"
+                                >
                                     <button
                                         class="btn btn-sm btn-outline-primary"
                                         @click="openEdit(developer)"
                                     >
-                                        ✏️ Edit
+                                        ✏️
                                     </button>
                                     <button
                                         class="btn btn-sm btn-outline-danger"
                                         @click="deleteDeveloper(developer)"
                                     >
-                                        🗑️ Delete
+                                        🗑️
                                     </button>
                                     <button
                                         class="btn btn-sm btn-outline-warning"
                                         @click="openFeedback(developer)"
                                     >
-                                        💬 Feedback
+                                        💬
                                     </button>
                                 </div>
                             </td>
@@ -219,12 +284,93 @@
                                 required
                             />
                         </div>
+                        <div
+                            v-if="
+                                editForm.documents && editForm.documents.length
+                            "
+                            class="mb-3"
+                        >
+                            <label class="fw-bold mb-2">Documents</label>
+                            <div
+                                v-for="doc in editForm.documents"
+                                :key="doc.id"
+                                class="border rounded p-2 mb-2 bg-light"
+                            >
+                                <div class="row g-2">
+                                    <div class="col-md-6">
+                                        <label class="small">Title</label>
+                                        <input
+                                            v-model="doc.title"
+                                            class="form-control form-control-sm"
+                                        />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="small">Department</label>
+                                        <input
+                                            v-model="doc.department"
+                                            class="form-control form-control-sm"
+                                        />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="small">Type</label>
+                                        <input
+                                            v-model="doc.type"
+                                            class="form-control form-control-sm"
+                                        />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="small">Uploaded By</label>
+                                        <input
+                                            v-model="doc.uploaded_by"
+                                            class="form-control form-control-sm"
+                                        />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="small">Status</label>
+                                        <input
+                                            v-model="doc.status"
+                                            class="form-control form-control-sm"
+                                        />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="small"
+                                            >Approval Comment</label
+                                        >
+                                        <input
+                                            v-model="doc.approval_comment"
+                                            class="form-control form-control-sm"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="mt-2 text-end">
+                                    <button
+                                        class="btn btn-sm btn-outline-primary"
+                                        type="button"
+                                        @click="submitEditDocument(doc)"
+                                        :disabled="doc.processing"
+                                    >
+                                        <span v-if="doc.processing">
+                                            <span
+                                                class="spinner-border spinner-border-sm"
+                                            ></span>
+                                            Saving...
+                                        </span>
+                                        <span v-else>Save Document</span>
+                                    </button>
+                                    <span
+                                        v-if="doc.success"
+                                        class="text-success ms-2"
+                                        >Saved!</span
+                                    >
+                                </div>
+                            </div>
+                        </div>
                         <div class="d-flex gap-2">
                             <button
                                 class="btn btn-primary"
                                 :disabled="editForm.processing"
                             >
-                                Update
+                                Update Developer
                             </button>
                             <button
                                 type="button"
@@ -273,8 +419,86 @@
                     </form>
                 </template>
             </Modal>
+
+            <!-- Edit Document Modal -->
+            <Modal :show="showEditDoc" @close="showEditDoc = false">
+                <template #default>
+                    <h4>Edit Document</h4>
+                    <form @submit.prevent="submitEditDocument">
+                        <div class="mb-2">
+                            <label class="small">Title</label>
+                            <input
+                                v-model="editDocForm.title"
+                                class="form-control"
+                            />
+                        </div>
+                        <div class="mb-2">
+                            <label class="small">Department</label>
+                            <input
+                                v-model="editDocForm.department"
+                                class="form-control"
+                            />
+                        </div>
+                        <div class="mb-2">
+                            <label class="small">Type</label>
+                            <input
+                                v-model="editDocForm.type"
+                                class="form-control"
+                            />
+                        </div>
+                        <div class="mb-2">
+                            <label class="small">Uploaded By</label>
+                            <input
+                                v-model="editDocForm.uploaded_by"
+                                class="form-control"
+                            />
+                        </div>
+                        <div class="mb-2">
+                            <label class="small">Status</label>
+                            <input
+                                v-model="editDocForm.status"
+                                class="form-control"
+                            />
+                        </div>
+                        <div class="mb-2">
+                            <label class="small">Approval Comment</label>
+                            <input
+                                v-model="editDocForm.approval_comment"
+                                class="form-control"
+                            />
+                        </div>
+                        <div class="d-flex gap-2 mt-2">
+                            <button
+                                class="btn btn-primary"
+                                :disabled="editDocForm.processing"
+                            >
+                                <span v-if="editDocForm.processing">
+                                    <span
+                                        class="spinner-border spinner-border-sm"
+                                    ></span>
+                                    Saving...
+                                </span>
+                                <span v-else>Save</span>
+                            </button>
+                            <button
+                                type="button"
+                                class="btn btn-secondary"
+                                @click="showEditDoc = false"
+                            >
+                                Cancel
+                            </button>
+                            <span
+                                v-if="editDocForm.success"
+                                class="text-success ms-2"
+                                >Saved!</span
+                            >
+                        </div>
+                    </form>
+                </template>
+            </Modal>
         </div>
-    </AuthenticatedLayout>
+    </div>
+    <!-- </AuthenticatedLayout> -->
 </template>
 
 <script setup>
@@ -291,6 +515,8 @@ watchEffect(() => {
         if (!uploadForms[dev.id]) {
             uploadForms[dev.id] = reactive({
                 title: "",
+                department: "",
+                type: "",
                 file: null,
                 processing: false,
                 success: false,
@@ -310,6 +536,8 @@ function submitUpload(developerId) {
     const formData = new FormData();
     formData.append("file", form.file);
     formData.append("title", form.title);
+    formData.append("department", form.department);
+    formData.append("type", form.type);
     router.post(route("developers.uploadDocument", developerId), formData, {
         forceFormData: true,
         onSuccess: () => {
@@ -317,6 +545,8 @@ function submitUpload(developerId) {
             form.success = true;
             setTimeout(() => (form.success = false), 2000);
             form.title = "";
+            form.department = "";
+            form.type = "";
             form.file = null;
             window.location.reload();
         },
@@ -339,7 +569,7 @@ const showFeedback = ref(false);
 const selectedDeveloper = ref(null);
 
 const createForm = useForm({ name: "", email: "" });
-const editForm = useForm({ id: null, name: "", email: "" });
+const editForm = useForm({ id: null, name: "", email: "", documents: [] });
 const feedbackForm = useForm({ developer_id: null, message: "" });
 const feedbackSuccess = ref(false);
 
@@ -357,11 +587,39 @@ function openEdit(developer) {
     editForm.id = developer.id;
     editForm.name = developer.name;
     editForm.email = developer.email;
+    // Deep copy documents to avoid mutating original data
+    editForm.documents = developer.documents
+        ? developer.documents.map((doc) => ({
+              ...doc,
+              processing: false,
+              success: false,
+          }))
+        : [];
     showEdit.value = true;
 }
 function submitEdit() {
     editForm.put(route("developers.update", editForm.id), {
         onSuccess: () => (showEdit.value = false),
+    });
+}
+
+// Save a single document's edits
+function submitEditDocument() {
+    editDocForm.processing = true;
+    editDocForm.success = false;
+    router.put(route("documents.update", editDocForm.id), editDocForm, {
+        onSuccess: () => {
+            editDocForm.processing = false;
+            editDocForm.success = true;
+            setTimeout(() => {
+                showEditDoc.value = false;
+                editDocForm.success = false;
+            }, 1200);
+            window.location.reload();
+        },
+        onError: () => {
+            editDocForm.processing = false;
+        },
     });
 }
 
@@ -394,35 +652,155 @@ function submitFeedback() {
         },
     });
 }
+
+// --- Edit Document Modal Logic ---
+const showEditDoc = ref(false);
+const editDocForm = reactive({
+    id: null,
+    title: "",
+    department: "",
+    type: "",
+    uploaded_by: "",
+    status: "",
+    approval_comment: "",
+    processing: false,
+    success: false,
+});
+
+function openEditDoc(doc) {
+    Object.assign(editDocForm, {
+        id: doc.id,
+        title: doc.title,
+        department: doc.department,
+        type: doc.type,
+        uploaded_by: doc.uploaded_by,
+        status: doc.status,
+        approval_comment: doc.approval_comment,
+        processing: false,
+        success: false,
+    });
+    showEditDoc.value = true;
+}
 </script>
 
 <style scoped>
-.table {
+.main-bg {
+    background: linear-gradient(120deg, #f8fafc 0%, #e9f1fa 100%);
+    min-height: 100vh;
+}
+.dev-card {
     background: #fff;
-    border-radius: 1rem;
-    box-shadow: 0 4px 24px rgba(60, 72, 100, 0.12),
+    border-radius: 1.5rem;
+    box-shadow: 0 8px 32px rgba(60, 72, 100, 0.13),
         0 1.5px 4px rgba(60, 72, 100, 0.08);
+    padding: 2.5rem 1.5rem;
+    max-width: 98vw;
+    margin-bottom: 2rem;
+}
+.main-table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 1rem;
+}
+.dev-table {
+    border-radius: 1rem;
+    overflow: hidden;
+    min-width: 900px;
+    background: #fafdff;
+}
+.docs-table-responsive {
+    max-width: 700px;
+    overflow-x: auto;
+}
+.docs-table {
+    min-width: 650px;
+    font-size: 0.92rem;
+    background: #f8fafd;
+    border-radius: 0.75rem;
 }
 .table th,
 .table td {
     vertical-align: middle !important;
     border-bottom: 1px solid #e9ecef;
-    padding: 0.75rem 1rem;
+    padding: 0.5rem 0.5rem;
+    word-break: break-word;
 }
 .table thead th {
     border-top: none;
-    font-size: 1.05rem;
+    font-size: 1.01rem;
     font-weight: 600;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.01em;
+    background: #eaf1fb;
 }
 .table-hover tbody tr:hover {
     background: #f6fafd;
     transition: background 0.2s ease;
 }
+.upload-form {
+    background: #f6fafd;
+    border: 1px solid #e3eaf3;
+}
 .btn {
     font-size: 0.875rem;
     padding: 0.4rem 0.75rem;
     border-radius: 6px;
+}
+.badge {
+    font-size: 0.85em;
+    padding: 0.35em 0.7em;
+    border-radius: 0.5em;
+}
+@media (max-width: 1200px) {
+    .docs-table {
+        min-width: 500px;
+        font-size: 0.89rem;
+    }
+    .main-table-responsive {
+        padding-bottom: 2rem;
+    }
+}
+@media (max-width: 900px) {
+    .dev-card {
+        padding: 1.2rem 0.2rem;
+    }
+    .dev-table {
+        min-width: 700px;
+    }
+}
+@media (max-width: 768px) {
+    .main-table-responsive {
+        padding-bottom: 2.5rem;
+    }
+    .docs-table {
+        min-width: 400px;
+        font-size: 0.85rem;
+    }
+    .dev-table {
+        min-width: 500px;
+    }
+    .table th,
+    .table td {
+        padding: 0.35rem 0.35rem;
+    }
+}
+@media (max-width: 576px) {
+    .main-table-responsive {
+        padding-bottom: 3rem;
+    }
+    .docs-table {
+        min-width: 350px;
+        font-size: 0.8rem;
+    }
+    .dev-table {
+        min-width: 350px;
+    }
+    .table th,
+    .table td {
+        padding: 0.25rem 0.25rem;
+    }
+    .dev-card {
+        padding: 0.5rem 0.1rem;
+    }
 }
 .modal-backdrop {
     position: fixed;

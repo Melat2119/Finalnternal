@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Document;
+use Illuminate\Support\Facades\Auth;
 
 class Developers extends Controller
 {
@@ -15,7 +16,26 @@ class Developers extends Controller
      */
     public function index()
     {
-        $developers = Developer::with('documents')->get();
+        $developers = Developer::with(['documents' => function($q) {
+            $q->select([
+                'documents.id',
+                'title',
+                'department',
+                'type',
+                'file_path',
+                'uploaded_by',
+                'status',
+                'approval_comment'
+            ]);
+        }])->get();
+
+        // Optionally, if you want to ensure the developer_id is present for Vue keys:
+        foreach ($developers as $developer) {
+            foreach ($developer->documents as $doc) {
+                $doc->developer_id = $developer->id;
+            }
+        }
+
         return Inertia::render('Developers/Index', [
             'developers' => $developers,
         ]);
@@ -52,6 +72,7 @@ class Developers extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'department' => 'nullable|string|max:255',
+            'type' => 'nullable|string|max:255',
             'file' => 'required|file|max:10240',
         ]);
 
@@ -60,8 +81,12 @@ class Developers extends Controller
 
         $document = Document::create([
             'title' => $validated['title'],
-            'department' => $validated['department'] ?? null,
+            'department' => $validated['department'] ?? '',
+            'type' => $validated['type'] ?? '',
             'file_path' => $fileUrl,
+            'uploaded_by' => Auth::check() ? (Auth::user()->name ?? Auth::user()->email) : ($developer->name ?? ''),
+            'status' => 'pending',
+            'approval_comment' => '',
         ]);
 
         $developer->documents()->attach($document->id);
