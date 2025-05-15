@@ -3,15 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\Reception;
+use App\Models\Document;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
 
 class ReceptionController extends Controller
 {
     public function index()
     {
-        $receptions = Reception::all();
-        return Inertia::render('Reception/Index', [
+        $receptions = \App\Models\Reception::with(['documents' => function($q) {
+            $q->select('documents.*');
+        }])->get();
+
+        return \Inertia\Inertia::render('Reception/Index', [
             'receptions' => $receptions
         ]);
     }
@@ -59,5 +64,29 @@ class ReceptionController extends Controller
     {
         $reception->delete();
         return redirect()->route('reception.index')->with('success', 'Reception deleted successfully.');
+    }
+
+    public function upload(Request $request, Reception $reception)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'type' => 'nullable|string|max:255',
+            'file' => 'required|file|max:10240',
+        ]);
+
+        $path = $request->file('file')->store('documents', 'public');
+        $fileUrl = '/storage/' . $path;
+
+        $document = Document::create([
+            'title' => $validated['title'],
+            'type' => $validated['type'] ?? '',
+            'file_path' => $fileUrl,
+            'status' => 'pending',
+            'uploaded_by' => Auth::user()->name ?? 'Reception',
+        ]);
+
+        $reception->documents()->attach($document->id);
+
+        return back()->with('success', 'Document uploaded and linked to reception.');
     }
 }

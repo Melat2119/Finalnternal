@@ -27,5 +27,10 @@ class Document extends Model
     {
         return $this->belongsToMany(\App\Models\Socialmediamanager::class, 'document_socialmediamanager', 'document_id', 'socialmediamanager_id');
     }
+
+    public function receptions()
+    {
+        return $this->belongsToMany(\App\Models\Reception::class, 'document_reception', 'document_id', 'reception_id');
+    }
 }
 

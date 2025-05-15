@@ -13,4 +13,9 @@ class Reception extends Model
         'name',
         'email',
     ];
+
+    public function documents()
+    {
+        return $this->belongsToMany(\App\Models\Document::class, 'document_reception', 'reception_id', 'document_id');
+    }
 }

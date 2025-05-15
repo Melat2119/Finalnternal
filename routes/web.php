@@ -68,6 +68,7 @@ Route::middleware('auth')->group(function () {
 
     // Add this line for full CRUD:
     Route::resource('reception', \App\Http\Controllers\ReceptionController::class);
+    Route::post('/reception/{reception}/upload', [\App\Http\Controllers\ReceptionController::class, 'upload'])->name('reception.upload');
 
     // Remove or comment out this line:
     // Route::get('/socialmedia', [\App\Http\Controllers\SocialmediamanagerController::class, 'index'])->middleware(['auth'])->name('socialmedia');
