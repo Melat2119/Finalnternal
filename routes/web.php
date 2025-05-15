@@ -13,6 +13,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\AdminController;
 use Spatie\Permission\Middlewares\RoleMiddleware;
 use Spatie\Permission\Middlewares\PermissionMiddleware;
+use App\Http\Controllers\LetterController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -99,6 +100,14 @@ Route::middleware('auth')->group(function () {
 
     // Add resource route for sales documents
     Route::resource('sales-documents', \App\Http\Controllers\SalesDocumentController::class);
+    Route::get('/admin/letter-stats', [LetterController::class, 'stats'])->name('admin.letter-stats');
+    Route::get('/admin/letters', [LetterController::class, 'index'])->name('admin.letters');
+
+    // Letters summary Inertia page
+    Route::get('/admin/letters-summary', [LetterController::class, 'summary'])->name('admin.letters.summary');
+    Route::post('/admin/letters', [LetterController::class, 'store'])->name('admin.letters.store');
+    Route::put('/admin/letters/{id}', [LetterController::class, 'update'])->name('admin.letters.update');
+    Route::delete('/admin/letters/{id}', [LetterController::class, 'destroy'])->name('admin.letters.destroy');
 });
 
 // Restrict developer routes to admin role
