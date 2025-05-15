@@ -33,6 +33,7 @@ class DatabaseSeeder extends Seeder
             AuditLogSeeder::class,
             SalesDocumentSeeder::class,
             AdminRoleSeeder::class,
+            SocialmediamanagerDocumentSeeder::class, // New seeder for managers AND their documents
         ]);
     }
 }

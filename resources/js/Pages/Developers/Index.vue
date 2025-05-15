@@ -60,16 +60,15 @@
                                                 </td>
                                                 <td>{{ doc.type }}</td>
                                                 <td>
-                                                    <button
-                                                        class="btn btn-link p-0"
-                                                        @click="
-                                                            downloadDocument(
-                                                                doc
+                                                    <a
+                                                        v-if="doc.file_path"
+                                                        :href="
+                                                            route(
+                                                                'documents.download',
+                                                                doc.id
                                                             )
                                                         "
-                                                        :disabled="
-                                                            !doc.file_path
-                                                        "
+                                                        class="btn btn-link p-0"
                                                         title="Download"
                                                     >
                                                         <i
@@ -79,7 +78,7 @@
                                                             class="visually-hidden"
                                                             >Download</span
                                                         >
-                                                    </button>
+                                                    </a>
                                                 </td>
                                                 <td>
                                                     {{ doc.uploaded_by }}
@@ -467,6 +466,13 @@
                                 class="form-control"
                             />
                         </div>
+                        <div class="mb-2">
+                            <label class="small">Approved By</label>
+                            <input
+                                v-model="editDocForm.approved_by"
+                                class="form-control"
+                            />
+                        </div>
                         <div class="d-flex gap-2 mt-2">
                             <button
                                 class="btn btn-primary"
@@ -508,6 +514,12 @@ import Modal from "@/Components/Modal.vue";
 import { router, usePage, useForm } from "@inertiajs/vue3";
 
 const developers = ref(usePage().props.developers);
+
+// Add this to debug the data coming from backend
+console.log("Developers from backend:", developers.value);
+developers.value.forEach((dev) => {
+    console.log(`Documents for developer ${dev.name}:`, dev.documents);
+});
 
 const uploadForms = reactive({});
 watchEffect(() => {
@@ -604,21 +616,37 @@ function submitEdit() {
 }
 
 // Save a single document's edits
-function submitEditDocument() {
-    editDocForm.processing = true;
-    editDocForm.success = false;
-    router.put(route("documents.update", editDocForm.id), editDocForm, {
+function submitEditDocument(doc = null) {
+    // If called from the modal, use editDocForm; if called from inline, use doc param
+    const target = doc || editDocForm;
+    target.processing = true;
+    target.success = false;
+    const payload = {
+        title: target.title,
+        department: target.department,
+        type: target.type,
+        uploaded_by: target.uploaded_by,
+        status: target.status,
+        approval_comment: target.approval_comment,
+        approved_by: target.approved_by,
+    };
+    router.put(route("documents.update", target.id), payload, {
+        preserveScroll: true,
         onSuccess: () => {
-            editDocForm.processing = false;
-            editDocForm.success = true;
+            target.processing = false;
+            target.success = true;
             setTimeout(() => {
-                showEditDoc.value = false;
-                editDocForm.success = false;
+                if (!doc) {
+                    showEditDoc.value = false;
+                    editDocForm.success = false;
+                } else {
+                    doc.success = false;
+                }
             }, 1200);
             window.location.reload();
         },
         onError: () => {
-            editDocForm.processing = false;
+            target.processing = false;
         },
     });
 }
@@ -663,6 +691,7 @@ const editDocForm = reactive({
     uploaded_by: "",
     status: "",
     approval_comment: "",
+    approved_by: "",
     processing: false,
     success: false,
 });
@@ -676,6 +705,7 @@ function openEditDoc(doc) {
         uploaded_by: doc.uploaded_by,
         status: doc.status,
         approval_comment: doc.approval_comment,
+        approved_by: doc.approved_by,
         processing: false,
         success: false,
     });

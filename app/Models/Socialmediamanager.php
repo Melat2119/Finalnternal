@@ -13,4 +13,9 @@ class Socialmediamanager extends Model
         'name',
         'email',
     ];
+
+    public function documents()
+    {
+        return $this->belongsToMany(\App\Models\Document::class, 'document_socialmediamanager', 'socialmediamanager_id', 'document_id');
+    }
 }

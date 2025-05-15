@@ -13,4 +13,9 @@ class Uidesigner extends Model
         'name',
         'email',
     ];
+
+    public function documents()
+    {
+        return $this->hasMany(\App\Models\Document::class, 'uidesigner_id');
+    }
 }

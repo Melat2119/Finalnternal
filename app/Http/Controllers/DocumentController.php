@@ -75,7 +75,18 @@ class DocumentController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $document = \App\Models\Document::findOrFail($id);
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'department' => 'nullable|string|max:255',
+            'type' => 'nullable|string|max:255',
+            'uploaded_by' => 'nullable|string|max:255',
+            'status' => 'nullable|string|max:255',
+            'approval_comment' => 'nullable|string|max:255',
+            'approved_by' => 'nullable|string|max:255',
+        ]);
+        $document->update($validated);
+        return back()->with('success', 'Document updated successfully.');
     }
 
     /**
@@ -84,5 +95,23 @@ class DocumentController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    /**
+     * Download the specified resource.
+     */
+    public function download($id)
+    {
+        $document = \App\Models\Document::findOrFail($id);
+        // Remove leading slash if present
+        $relativePath = ltrim($document->file_path, '/');
+        // Remove 'storage/' prefix to get the path relative to storage/app/public
+        $relativePath = preg_replace('#^storage/#', '', $relativePath);
+
+        if (!Storage::disk('public')->exists($relativePath)) {
+            abort(404, 'File not found.');
+        }
+
+        return response()->download(storage_path('app/public/' . $relativePath), basename($relativePath));
     }
 }

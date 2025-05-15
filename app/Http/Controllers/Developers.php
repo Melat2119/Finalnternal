@@ -17,19 +17,9 @@ class Developers extends Controller
     public function index()
     {
         $developers = Developer::with(['documents' => function($q) {
-            $q->select([
-                'documents.id',
-                'title',
-                'department',
-                'type',
-                'file_path',
-                'uploaded_by',
-                'status',
-                'approval_comment'
-            ]);
+            $q->select('documents.*');
         }])->get();
 
-        // Optionally, if you want to ensure the developer_id is present for Vue keys:
         foreach ($developers as $developer) {
             foreach ($developer->documents as $doc) {
                 $doc->developer_id = $developer->id;
@@ -86,7 +76,8 @@ class Developers extends Controller
             'file_path' => $fileUrl,
             'uploaded_by' => Auth::check() ? (Auth::user()->name ?? Auth::user()->email) : ($developer->name ?? ''),
             'status' => 'pending',
-            'approval_comment' => '',
+            'approval_comment' => 'Pending review', // Set a default value
+            'approved_by' => Auth::check() ? (Auth::user()->name ?? Auth::user()->email) : 'System', // Set to current user or 'System'
         ]);
 
         $developer->documents()->attach($document->id);

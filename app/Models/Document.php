@@ -15,11 +15,17 @@ class Document extends Model
         'status',
         'approved_by',
         'approval_comment',
+        'uidesigner_id',
     ];
 
     public function developers()
     {
         return $this->belongsToMany(Developer::class, 'developer_document');
+    }
+
+    public function socialmediamanagers()
+    {
+        return $this->belongsToMany(\App\Models\Socialmediamanager::class, 'document_socialmediamanager', 'document_id', 'socialmediamanager_id');
     }
 }
 

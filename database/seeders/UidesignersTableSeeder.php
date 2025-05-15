@@ -3,16 +3,34 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB; // Import DB facade
+use Illuminate\Support\Facades\Schema;
 use App\Models\Uidesigner;
 
 class UidesignersTableSeeder extends Seeder
 {
-    public function run(): void
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
     {
-        Uidesigner::truncate();
-        Uidesigner::insert([
-            ['name' => 'Charlie UI', 'email' => 'charlie.ui@example.com'],
-            ['name' => 'Dana UI', 'email' => 'dana.ui@example.com'],
+        Schema::disableForeignKeyConstraints();
+
+        // Replace truncate with delete for better compatibility with FK checks disabled
+        DB::table('uidesigners')->delete(); 
+
+        Schema::enableForeignKeyConstraints();
+
+        Uidesigner::create([
+            'name' => 'UI Designer One',
+            'email' => 'uidesigner1@example.com',
+        ]);
+
+        Uidesigner::create([
+            'name' => 'UI Designer Two',
+            'email' => 'uidesigner2@example.com',
         ]);
     }
 }

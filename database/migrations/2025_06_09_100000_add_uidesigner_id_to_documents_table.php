@@ -4,29 +4,20 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDocumentsTable extends Migration
-{
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+return new class extends Migration {
     public function up()
     {
         Schema::table('documents', function (Blueprint $table) {
-            $table->string('uploaded_by')->nullable()->change();
+            $table->unsignedBigInteger('uidesigner_id')->nullable()->after('id');
+            $table->foreign('uidesigner_id')->references('id')->on('uidesigners')->onDelete('set null');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::table('documents', function (Blueprint $table) {
-            $table->integer('uploaded_by')->nullable()->change();
+            $table->dropForeign(['uidesigner_id']);
+            $table->dropColumn('uidesigner_id');
         });
     }
-}
+};

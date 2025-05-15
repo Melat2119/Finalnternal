@@ -42,6 +42,8 @@ Route::middleware('auth')->group(function () {
 
     // Resourceful routes for main entities
     Route::resource('documents', DocumentController::class)->except(['show']);
+    // Add this download route:
+    Route::get('/documents/{document}/download', [DocumentController::class, 'download'])->name('documents.download');
     Route::resource('categories', CategoryController::class)->except(['show']);
     Route::resource('services', ServiceController::class)->except(['show']);
     Route::resource('products', ProductController::class)->except(['show']);
@@ -76,6 +78,7 @@ Route::middleware('auth')->group(function () {
 
     // Add this line for full CRUD for UI/UX Designers:
     Route::resource('ui', \App\Http\Controllers\UidesignerController::class);
+    Route::post('/uiux/{uidesigner}/upload-document', [\App\Http\Controllers\UidesignerController::class, 'storeDocument'])->name('ui.uploadDocument');
 
     // Add a route for the manager documents page:
     Route::get('/manager/documents', [\App\Http\Controllers\ManagerController::class, 'documents'])->name('manager.documents');
